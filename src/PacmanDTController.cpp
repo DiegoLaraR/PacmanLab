@@ -1,6 +1,9 @@
 #include "PacmanDTController.h" 
-#include <iostream> 
-#include <SDL2/SDL.h> 
+#include <iostream>
+#include <SDL2/SDL.h>
+//#include "GameState.h"
+
+using namespace std;
 
 PacmanDTController::PacmanDTController(std::shared_ptr<Character> character): Controller(character){ } 
 PacmanDTController::~PacmanDTController() { } 
