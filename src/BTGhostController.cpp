@@ -8,6 +8,7 @@
 #include "BTGhostController.h"
 #include <iostream>
 
+using namespace std;
 
 Info* Info::info=nullptr;
 
@@ -16,8 +17,20 @@ BTGhostController::BTGhostController(std::shared_ptr<Character> character):Contr
 
 	auto filter = std::make_shared<Filter>();
 	filter->addCondition(std::make_shared<Powerpill>()); 	// Condition
-	filter->addAction(std::make_shared<Frightened>()); 		// Action
+	filter->addAction(std::make_shared<Frightened>()); 	
+	
+	auto filter2 = make_shared<Filter>();
+
+	filter2->addCondition(make_shared<TimeOut>());
+	filter2->addAction(make_shared<Scatter>());
+
+	auto chase = make_shared<Chase>();
+
+	
+	// Action
 	root->addChild(filter);
+	root->addChild(filter2);
+	root->addChild(chase);
 }
 
 BTGhostController::~BTGhostController() {
@@ -27,7 +40,10 @@ BTGhostController::~BTGhostController() {
 Move BTGhostController::getMove(const GameState& gs){
 	Info::getInfo()->in_character=character;
 	Info::getInfo()->in_gamestate=&gs;
+	
+
 	root->tick();
+
 
 	return Info::getInfo()->out_move;
 }
@@ -49,21 +65,42 @@ Status TimeOut::update(){
 
 Status Chase::update(){
 	//std::cerr << " Chase \n" ;
-	auto character = Info::getInfo()->in_character;
 	auto gs = Info::getInfo()->in_gamestate;
-	auto target= gs->getMaze().getNodePos(gs->getPacmanPos());
+	
+	auto direction = gs->getPacmanDir();
+	
+	Move m = static_cast<Move>(direction);
+	
+	int node = gs->getPacmanPos();
+	
+	for (int i = 0; i < 4; i++) {
+
+		int nextNode = gs->getMaze().getNeighbour(node, m);
+
+		if (nextNode == -1) {
+			break;
+		}
+		
+		node = nextNode;
+	}
+	
+	auto target = gs->getMaze().getNodePos(node);
+	
 	float min=1000000000;
 	Move minMove=PASS;
-	std::vector<Move> moves;
+	vector<Move> moves;
+	auto character = Info::getInfo()->in_character;
+	
 	if(character->getDirection()==PASS) {
 		moves=gs->getMaze().getPossibleMoves(character->getPos());
+		
 	} else {
 		moves = gs->getMaze().getGhostLegalMoves(character->getPos(), character->getDirection());
 	}
-
+	
 	for(auto move:moves) {
 		if(move==PASS) {
-			break;
+			continue;
 		}
 		float dist = euclid2(target,gs->getMaze().getNodePos(gs->getMaze().getNeighbour(character->getPos(),move)));
 		if(dist<min) {
@@ -71,9 +108,14 @@ Status Chase::update(){
 			minMove=move;
 		}
 	}
+	std::cerr << "Nodo 4: " << target.first << ", " << target.second << "\n" ;
+
+	auto pacman = gs->getMaze().getNodePos(gs->getPacmanPos());
+	std::cerr << "Pacman: " << pacman.first << ", " << pacman.second << "\n" ;
 	Info::getInfo()->out_move = minMove;
 	return BH_SUCCESS;
 }
+
 
 Status Powerpill::update(){
 	auto character = Info::getInfo()->in_character;
@@ -92,7 +134,7 @@ Frightened::Frightened() : Behavior(), e(rand()), uniform_dist(0,3){
 }
 
 Status Frightened::update(){
-	//std::cerr << " Frightened \n" ;
+	std::cerr << " Frightened \n" ;
 	auto character = Info::getInfo()->in_character;
 	auto gs = Info::getInfo()->in_gamestate;
 	std::vector<Move> moves;
@@ -112,7 +154,7 @@ Scatter :: Scatter() : Behavior(){
 }
 
 Status Scatter::update(){
-	//std::cerr << " Scatter \n" ;
+	std::cerr << " Scatter \n" ;
 	if(target.first == -1){
 		target = Info::getInfo()->in_gamestate->getMaze().getPowerPillPositions()[0];
 	}
@@ -127,11 +169,11 @@ Status Scatter::update(){
 	} else {
 		moves = gs->getMaze().getGhostLegalMoves(character->getPos(), character->getDirection());
 	}
-
+	
 	float min=100000000;
 	for(auto move:moves) {
 		if(move==PASS) {
-			break;
+			continue;;
 		}
 		float dist = euclid2(target,gs->getMaze().getNodePos(gs->getMaze().getNeighbour(character->getPos(),move)));
 		if(dist<min) {

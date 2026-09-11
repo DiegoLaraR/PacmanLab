@@ -125,7 +125,7 @@ void ChaseState::onEnter(const GameState& ){
 Move ChaseState::onUpdate(const GameState& game){
 	std::vector<Move> moves;
 
-	std::cout << "chase\n";
+	//std::cout << "chase\n";
 	const auto pacmanCoord=game.getMaze().getNodePos(game.getPacmanPos());
 	const auto myPos=character->getPos();
 	//const auto myCoord=game.getMaze().getNodePos(myPos);
@@ -164,7 +164,7 @@ void ScatterState::onEnter(const GameState&)
 
 Move ScatterState::onUpdate(const GameState& game){
 
-	std::cout << "Scatter\n";
+	//std::cout << "Scatter\n";
 	std::vector<Move> moves;
 	const auto myPos=character->getPos();
 	const std::pair<int, int> corner = {-20, -20};
@@ -203,7 +203,7 @@ void FrigtnedState::onEnter(const GameState&)
 Move FrigtnedState ::onUpdate(const GameState& game){
 	std::vector<Move> moves;
 
-	std::cout << "Frigtned\n";
+	//std::cout << "Frigtned\n";
 	const auto pacmanCoord = game.getMaze().getNodePos(game.getPacmanPos());
 	const auto myPos = character->getPos();
 
