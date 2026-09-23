@@ -13,6 +13,7 @@ extern bool nogui;
 
 Maze::Maze(const std::string &filename) {
 	loadMaze(filename);
+	totalPills = pills.size(); 
 }
 
 Maze::~Maze() {

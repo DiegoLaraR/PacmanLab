@@ -7,7 +7,7 @@
 
 #include "Character.h"
 
-Character::Character(int startNode):currentNodeIndex(startNode),startNodeIndex(startNode),lastMove(PASS) {
+Character::Character(int startNode) : currentNodeIndex(startNode),startNodeIndex(startNode),lastMove(PASS) {
 
 }
 

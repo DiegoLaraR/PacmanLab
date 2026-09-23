@@ -20,6 +20,9 @@
 #include "SueController.h"
 #include "PacmanController.h"
 #include "PacmanDTController.h"
+#include "BTFantasma.h"
+#include "FSMFantasma.h"
+
 
 extern bool quick;
 extern bool nogui;
@@ -31,7 +34,7 @@ gv(std::make_unique<GameView>(std::vector<std::string>{"images/maze-a.png","imag
 
 	auto pacman=std::make_shared<MsPacMan>(gameState.getMaze().getPacmanStart());
 	gameState.addPacMan(pacman);
-	pacmanControl=std::make_shared<KeyboardController>(pacman);
+	pacmanControl=std::make_shared<PacmanDTController>(pacman);
 
 	std::vector<std::shared_ptr<Ghost>> ghosts;   
 	for(int i=0;i<4;i++){
@@ -44,10 +47,18 @@ gv(std::make_unique<GameView>(std::vector<std::string>{"images/maze-a.png","imag
 	//ghostsControl.push_back(std::make_shared<FSMController>(ghosts[1]));
 	// ghostsControl.push_back(std::make_shared<BTGhostController>(ghosts[2]));
 	//ghostsControl.push_back(std::make_shared<RandomController>(ghosts[3]));
+	
 	ghostsControl.push_back(std::make_shared<BlinkyController>(ghosts[0])); 	// implementar
+	
+	
 	ghostsControl.push_back(std::make_shared<InkyController>(ghosts[1])); 		// implementar
-	ghostsControl.push_back(std::make_shared<BTGhostController>(ghosts[2]));		// implementar
+	//ghostsControl.push_back(std::make_shared<BTFantasma>(ghosts[1])); 		// implementar
+	
+	
+	ghostsControl.push_back(std::make_shared<PinkyController>(ghosts[2]));		// implementar
+	
 	ghostsControl.push_back(std::make_shared<SueController>(ghosts[3]));		// implementar
+	//ghostsControl.push_back(std::make_shared<FSMFantasma>(ghosts[3]));		// implementar
 }
 
 const int NOSCORELIMIT = 10000;

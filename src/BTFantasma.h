@@ -7,13 +7,13 @@
 #include <random>
 
 using namespace std;
-class InfoInky{
-    static InfoInky *info;
-    InfoInky(){}
+class InfoBTFantasma{
+    static InfoBTFantasma *info;
+    InfoBTFantasma(){}
 
 public:
-    static InfoInky* getInfo(){
-        if(info==nullptr)info = new InfoInky();
+    static InfoBTFantasma* getInfo(){
+        if(info==nullptr)info = new InfoBTFantasma();
         return info;
     }
     const GameState* in_gamestate;
@@ -21,64 +21,64 @@ public:
     std::shared_ptr<Character> in_character;
 };
 
-class InkyController: public Controller {
+class BTFantasma: public Controller {
 private:
     std::shared_ptr<Composite> root;
 public:
-	InkyController(std::shared_ptr<Character> character);
-	virtual ~InkyController();
+	BTFantasma(std::shared_ptr<Character> character);
+	virtual ~BTFantasma();
 	virtual Move getMove(const GameState& gs) override;
 };
 
-class ChaseInky : public Behavior{
+class ChaseBTFantasma : public Behavior{
 public:
     virtual Status update() override;
 
 };
 
-class FrightenedInky : public Behavior{
+class FrightenedBTFantasma : public Behavior{
 private:
     std::mt19937 e;
     std::uniform_int_distribution<int> uniform_dist;
 public:
     virtual Status update() override;
-    FrightenedInky ();
+    FrightenedBTFantasma ();
 
 };
 
-class ScatterInky : public Behavior{
+class ScatterBTFantasma : public Behavior{
 private:
     std::pair<int,int> target;
 
 public:
     virtual Status update() override;
-    ScatterInky();
+    ScatterBTFantasma();
 
 };
 
-// class GuardPowerPill : public Behavior
-// {
-// public:
-//     virtual Status update() override;
-//     GuardPowerPill();
-// };
+class GuardPowerPill : public Behavior
+{
+public:
+    virtual Status update() override;
+    GuardPowerPill();
+};
 
-// class GuardPowerPillCondition : public Behavior
-// {
-// public:
-//     virtual Status update() override;
-// };
-
-class PowerpillInky : public Behavior{
+class GuardPowerPillCondition : public Behavior
+{
 public:
     virtual Status update() override;
 };
 
-class TimeOutInky : public Behavior{
+class PowerpillBTFantasma : public Behavior{
+public:
+    virtual Status update() override;
+};
+
+class TimeOutBTFantasma : public Behavior{
 private:
     std::chrono::time_point<std::chrono::high_resolution_clock> lastTime;
 public:
     virtual Status update() override;
-    TimeOutInky();
+    TimeOutBTFantasma();
 };
 

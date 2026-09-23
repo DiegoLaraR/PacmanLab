@@ -16,6 +16,9 @@ class Maze {
 	std::vector<Node> nodes;
 	std::unordered_set<int> pills;
 	std::unordered_set<int> powerPills;
+	int totalPills;
+
+
 	std::array<int,4> ghostStart;
 	int pacmanStart;
 	void loadMaze(const std::string &filename);
@@ -35,6 +38,12 @@ public:
 	int getPacmanStart() const {
 		return pacmanStart;
 	}
+
+	int getTotalPill() const 
+	{
+		return totalPills;
+	}
+
 	int getNeighbour(int index, Move m) const{
 		return nodes[index].getNeighbours()[m];
 	}
@@ -64,7 +73,6 @@ public:
 	std::vector<Move> getPossibleMoves(int index) const;
 	bool isDone() const;
 };
-
 
 
 #endif /* MAZE_H_ */

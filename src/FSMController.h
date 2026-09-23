@@ -57,9 +57,9 @@ class FrigtnedTransition:public FSMTransition{
 
 class TimeTransition : public FSMTransition{
 	
+	std::shared_ptr<FSMState> _next;
 	float _time;
 	std::chrono::high_resolution_clock::time_point _start;
-	std::shared_ptr<FSMState> _next;
 public:
 	TimeTransition(std::shared_ptr<FSMState> next, float time);
 	bool isValid(const GameState& gs)override;

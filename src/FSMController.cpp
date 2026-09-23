@@ -52,7 +52,7 @@ TimeTransition::TimeTransition(std::shared_ptr<FSMState> next, float time): _nex
 	_start = std::chrono::high_resolution_clock::now();
 }
 
-bool TimeTransition::isValid(const GameState& gs)
+bool TimeTransition::isValid(const GameState&)
 {
 	auto now = std::chrono::high_resolution_clock::now();
 	std::chrono::duration<float> elapsed = now - _start;
@@ -65,7 +65,7 @@ std::shared_ptr<FSMState> TimeTransition::getNextState()
 	return _next;
 }
 
-void TimeTransition::onTransition(const GameState& gs)
+void TimeTransition::onTransition(const GameState&)
 {
 	_start = std::chrono::high_resolution_clock::now();
 }
@@ -74,7 +74,7 @@ void TimeTransition::onTransition(const GameState& gs)
 ///////////////////////////////////NonFrigtnedTransition///////////////////////////////
 NonFrigtnedTransition::NonFrigtnedTransition(std::shared_ptr<FSMState> next, std::shared_ptr<Character> character):_next(next), _character(character){
 }
-bool NonFrigtnedTransition::isValid(const GameState& gs){
+bool NonFrigtnedTransition::isValid(const GameState&){
 	
 	Ghost *ghost = dynamic_cast<Ghost*>(_character.get());
 	if(!ghost->isEdible())
@@ -92,7 +92,7 @@ FrigtnedTransition::FrigtnedTransition(std::shared_ptr<FSMState> next, std::shar
 	
 }
 
-bool FrigtnedTransition::isValid(const GameState& gs){
+bool FrigtnedTransition::isValid(const GameState&){
 	
 	Ghost *ghost = dynamic_cast<Ghost*>(_character.get());
 	if(ghost->isEdible())
@@ -104,11 +104,6 @@ bool FrigtnedTransition::isValid(const GameState& gs){
 std::shared_ptr<FSMState> FrigtnedTransition::getNextState(){
 	return _next;
 }
-
-
-
-
-
 
 
 
@@ -231,6 +226,9 @@ Move FrigtnedState ::onUpdate(const GameState& game){
 FrigtnedState::~FrigtnedState(){
 
 }
+
+
+
 
 
 
