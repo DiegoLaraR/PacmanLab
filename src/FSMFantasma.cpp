@@ -61,7 +61,8 @@ std::shared_ptr<FSMState> FrigtnedTransitionFSMFantasma::getNextState(){
 
 //////////////////////////////////ChaseTransitionFSMFantasma///////////////////
 
-ChaseTransitionFSMFantasma::ChaseTransitionFSMFantasma(std::shared_ptr<FSMState> next, std::shared_ptr<Character> character, float distance) : _next(next), _character(character), _distance(distance){
+ChaseTransitionFSMFantasma::ChaseTransitionFSMFantasma(std::shared_ptr<FSMState> next, std::shared_ptr<Character> character, float distance) 
+: _next(next), _character(character), _distance(distance){
 }
 
 bool ChaseTransitionFSMFantasma::isValid(const GameState& gs){
@@ -94,82 +95,6 @@ bool ScatterTransitionFSMFantasma::isValid(const GameState& gs){
 std::shared_ptr<FSMState> ScatterTransitionFSMFantasma::getNextState(){
 	return _next;
 }
-
-///////////////////////////////PatrolFSMFantasma///////////////////////////////////////
-
-// PatrolFSMFantasma::PatrolFSMFantasma(std::shared_ptr<Character> _character):FSMState(_character), currentPoint(0){
-	
-// 	patrolPoints.push_back({4, 4});
-// 	patrolPoints.push_back({104, 4});
-// 	patrolPoints.push_back({104, 116});
-// 	patrolPoints.push_back({4, 116});
-
-
-// }
-// void PatrolFSMFantasma::onEnter(const GameState& ){
-	
-// 	currentPoint = 0;
-// }
-// Move PatrolFSMFantasma::onUpdate(const GameState& game){
-// 	std::vector<Move> moves;
-
-// 	const auto myPos=character->getPos();
-	
-// 	if(character->getDirection()==PASS){
-// 		moves=game.getMaze().getPossibleMoves(myPos);
-// 	}else{
-// 		moves=game.getMaze().getGhostLegalMoves(myPos,character->getDirection());
-// 	}
-
-// 	auto target = patrolPoints[currentPoint];
-
-// 	auto currentPos = game.getMaze().getNodePos(myPos);
-
-// 	float distance = euclid2(currentPos, target);
-
-// 	if(distance < 25)
-// 	{
-// 		currentPoint++;
-
-// 		if(currentPoint >= (int)patrolPoints.size())
-// 		{
-// 			currentPoint = 0;
-// 		}
-// 		target = patrolPoints[currentPoint];
-// 	}
-	
-// 	float min=100000000;
-// 	int minI=0;
-
-// 	for(unsigned int i=0 ; i < moves.size() ; i++){
-		
-// 		if(moves[i] == PASS)
-// 			continue;
-		
-// 		int nextNode= game.getMaze().getNeighbour(myPos, moves[i]);
-
-// 		if(nextNode == -1)
-// 			continue;
-
-// 		auto nextPos = game.getMaze().getNodePos(nextNode);
-// 		auto dist = euclid2(nextPos, target);
-
-// 		if(dist < min)
-// 		{
-// 			min = dist;
-// 			minI = i;
-// 		}
-// 	}
-// 	return moves[minI];
-
-// }
-// PatrolFSMFantasma::~PatrolFSMFantasma(){}
-
-
-
-
-
-
 
 /////////////////////////////////Estados/////////////////////////////////////////
 ///////////////////////////////ChaseFSMFantasma///////////////////////////////////////

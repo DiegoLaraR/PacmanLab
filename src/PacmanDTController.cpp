@@ -58,7 +58,6 @@ Move PacmanDTController::getMove(const GameState& gs){
         }
     }
 
-
 	InfoPacman::getInfo()->in_character=character;
 	InfoPacman::getInfo()->in_gamestate=&gs;
 	
@@ -197,10 +196,6 @@ Status EatPillPacman::update()
 
 	for (auto pill : pills)
 	{
-		// int dx = pill.first - pacmanCoords.first;
-		// int dy = pill.second - pacmanCoords.second;
-
-		// int dist = (dx * dx) + (dy * dy);
 		int dist = euclid2(pill, pacmanCoords);
 
 		if(dist < minDist)
@@ -247,10 +242,6 @@ Status EatPillPacman::update()
 			continue;
 
 		auto vecinoCoords = gs->getMaze().getNodePos(vecino);
-
-		// int dx = nearestPill.first - vecinoCoords.first;
-		// int dy = nearestPill.second - vecinoCoords.second;
-
 		int dist = euclid2(nearestPill, vecinoCoords);
 
 		if(m == opossite){dist += 1000;}
@@ -280,9 +271,6 @@ Status PowerPillTransition::update()
 
 	for(auto pill : powerPills)
 	{
-		// int dx = pill.first - pacmanCoords.first;
-		// int dy = pill.second - pacmanCoords.second;
-
 		int dist = euclid2(pill, pacmanCoords);
 
 		if(dist <= 25)
@@ -303,7 +291,6 @@ Status EatPowerPillPacman::update()
 	auto pacmanPos = gs->getPacmanPos();
 	auto pacmanCoords = gs->getMaze().getNodePos(pacmanPos);
 	
-	
 	auto powerPills = gs->getMaze().getPowerPillPositions();
 	
 	if(powerPills.empty())
@@ -317,9 +304,6 @@ Status EatPowerPillPacman::update()
 
 	for (auto pill : powerPills)
 	{
-		// int dx = pill.first - pacmanCoords.first;
-		// int dy = pill.second - pacmanCoords.second;
-
 		int dist = euclid2(pill, pacmanCoords);
 
 		if(dist < minDist)
@@ -342,9 +326,6 @@ Status EatPowerPillPacman::update()
 			continue;
 
 		auto vecinoCoords = gs->getMaze().getNodePos(vecino);
-
-		// int dx = nearestPill.first - vecinoCoords.first;
-		// int dy = nearestPill.second - vecinoCoords.second;
 
 		int dist = euclid2(nearestPill, vecinoCoords);
 
@@ -426,10 +407,6 @@ Status EatGhostPacman::update()
 		if(vecino < 0) continue;
 
 		auto vecinoCoords = gs->getMaze().getNodePos(vecino);
-
-		// int dx = targetGhostCoords.first - vecinoCoords.first;
-		// int dy = targetGhostCoords.second - vecinoCoords.second;
-		
 		int dist = euclid2(targetGhostCoords, vecinoCoords);
 
 		if(dist < minMoveDist)

@@ -163,18 +163,15 @@ Status ChaseBTFantasma::update(){
 	//nodo de pacman
 	int pacmanPos = gs->getPacmanPos();
 	
-	
 	// Se obtienen las tres casillas atras de pacman, segun la direccion que esta mirando
 	if(mOpossite != PASS)
     {
         for (int i = 0; i < 3; i++) {
 
             int nextNode = gs->getMaze().getNeighbour(pacmanPos, mOpossite);
-
             if (nextNode == -1) {
                 break;
             }
-            
             pacmanPos = nextNode;
         }
     }
@@ -268,5 +265,5 @@ Status FrightenedBTFantasma::update(){
     }
     Move m = moves[rand()%moves.size()];
     InfoBTFantasma::getInfo()->out_move = m;
-    return BH_SUCCESS; //NO es as� pero por ahora
+    return BH_SUCCESS; 
 }

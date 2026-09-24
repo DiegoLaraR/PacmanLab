@@ -9,12 +9,6 @@ InfoInky* InfoInky::info=nullptr;
 
 InkyController::InkyController(std::shared_ptr<Character> character):Controller(character),root(std::make_shared<Selector>())  {
 
-
-	// auto newBehavior = std::make_shared<Filter>();
-
-	// newBehavior->addCondition(make_shared<GuardPowerPillCondition>());
-	// newBehavior->addAction(make_shared<GuardPowerPill>());
-	
 	auto filter = std::make_shared<Filter>();
 	filter->addCondition(std::make_shared<PowerpillInky>()); 	// Condition
 	filter->addAction(std::make_shared<FrightenedInky>()); 	
@@ -62,59 +56,6 @@ Status TimeOutInky::update(){
 		return BH_FAILURE;
 	}
 }
-
-// Status GuardPowerPillCondition::update()
-// {
-// 	auto gs = InfoInky::getInfo()->in_gamestate;
-
-// 	if(gs->getMaze().getPowerPillPositions().size() == 1)
-// 	{
-// 		return BH_SUCCESS;
-// 	}
-// 	else
-// 	{
-// 		return BH_FAILURE;
-// 	}
-// }
-
-// GuardPowerPill::GuardPowerPill() : Behavior()
-// {
-	
-// }
-
-// Status GuardPowerPill::update()
-// {
-// 	auto gs = InfoInky::getInfo()->in_gamestate;
-
-// 	auto target = gs->getMaze().getPowerPillPositions()[0];
-
-// 	float min=1000000000;
-// 	Move minMove=PASS;
-// 	vector<Move> moves;
-// 	auto character = InfoInky::getInfo()->in_character;
-	
-// 	if(character->getDirection()==PASS) {
-// 		moves=gs->getMaze().getPossibleMoves(character->getPos());
-		
-// 	} else {
-// 		moves = gs->getMaze().getGhostLegalMoves(character->getPos(), character->getDirection());
-// 	}
-	
-// 	for(auto move:moves) {
-// 		if(move==PASS) {
-// 			continue;
-// 		}
-// 		float dist = euclid2(target,gs->getMaze().getNodePos(gs->getMaze().getNeighbour(character->getPos(),move)));
-// 		if(dist<min) {
-// 			min=dist;
-// 			minMove=move;
-// 		}
-// 	}
-
-// 	InfoInky::getInfo()->out_move = minMove;
-// 	return BH_SUCCESS;
-
-// }
 
 Status ChaseInky::update(){
 	std::cerr << "Inky Chase \n" ;
@@ -228,7 +169,7 @@ Status FrightenedInky::update(){
 	}
 	Move m = moves[rand()%moves.size()];
 	InfoInky::getInfo()->out_move = m;
-	return BH_SUCCESS; //NO es as� pero por ahora
+	return BH_SUCCESS;
 }
 
 ScatterInky :: ScatterInky() : Behavior(){

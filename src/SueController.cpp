@@ -41,8 +41,6 @@ std::shared_ptr<FSMState> PillTransitionSue::getNextState(){
 	return _next;
 }
 
-
-
 ///////////////////TimeTransitionSue//////////////
 TimeTransitionSue::TimeTransitionSue(std::shared_ptr<FSMState> next, float time): _next(next), _time(time)
 {
@@ -118,121 +116,10 @@ bool HomeTransition::isValid(const GameState& gs){
 	}
 	
 	return false;
-	
 }
 std::shared_ptr<FSMState> HomeTransition::getNextState(){
 	return _next;
 }
-
-//////////////////////////////////PatrolTransition///////////////////
-
-// PatrolTransition::PatrolTransition(std::shared_ptr<FSMState> next, std::shared_ptr<Character> character, float distance) : _next(next), _character(character), _distance(distance){
-// }
-
-// bool PatrolTransition::isValid(const GameState& gs){
-	
-// 	auto pacmanPos = gs.getMaze().getNodePos(gs.getPacmanPos());
-// 	auto suePos = gs.getMaze().getNodePos(_character->getPos());
-
-// 	auto dist = euclid2(suePos, pacmanPos);
-
-// 	return dist > _distance;
-// }
-// std::shared_ptr<FSMState> PatrolTransition::getNextState(){
-// 	return _next;
-// }
-
-//////////////////////////////////ChaseTransition///////////////////
-
-// ChaseTransition::ChaseTransition(std::shared_ptr<FSMState> next, std::shared_ptr<Character> character, float distance) : _next(next), _character(character), _distance(distance){
-// }
-
-// bool ChaseTransition::isValid(const GameState& gs){
-	
-// 	auto pacmanPos = gs.getMaze().getNodePos(gs.getPacmanPos());
-// 	auto suePos = gs.getMaze().getNodePos(_character->getPos());
-
-// 	auto dist = euclid2(suePos, pacmanPos);
-
-// 	return dist < _distance;
-// }
-// std::shared_ptr<FSMState> ChaseTransition::getNextState(){
-// 	return _next;
-// }
-
-/////////////////////////////////Estados/////////////////////////////////////////
-
-///////////////////////////////PatrolSue///////////////////////////////////////
-
-// PatrolSue::PatrolSue(std::shared_ptr<Character> _character):FSMState(_character), currentPoint(0){
-	
-// 	patrolPoints.push_back({4, 4});
-// 	patrolPoints.push_back({104, 4});
-// 	patrolPoints.push_back({104, 116});
-// 	patrolPoints.push_back({4, 116});
-
-
-// }
-// void PatrolSue::onEnter(const GameState& ){
-	
-// 	currentPoint = 0;
-// }
-// Move PatrolSue::onUpdate(const GameState& game){
-// 	std::vector<Move> moves;
-
-// 	const auto myPos=character->getPos();
-	
-// 	if(character->getDirection()==PASS){
-// 		moves=game.getMaze().getPossibleMoves(myPos);
-// 	}else{
-// 		moves=game.getMaze().getGhostLegalMoves(myPos,character->getDirection());
-// 	}
-
-// 	auto target = patrolPoints[currentPoint];
-
-// 	auto currentPos = game.getMaze().getNodePos(myPos);
-
-// 	float distance = euclid2(currentPos, target);
-
-// 	if(distance < 25)
-// 	{
-// 		currentPoint++;
-
-// 		if(currentPoint >= (int)patrolPoints.size())
-// 		{
-// 			currentPoint = 0;
-// 		}
-// 		target = patrolPoints[currentPoint];
-// 	}
-	
-// 	float min=100000000;
-// 	int minI=0;
-
-// 	for(unsigned int i=0 ; i < moves.size() ; i++){
-		
-// 		if(moves[i] == PASS)
-// 			continue;
-		
-// 		int nextNode= game.getMaze().getNeighbour(myPos, moves[i]);
-
-// 		if(nextNode == -1)
-// 			continue;
-
-// 		auto nextPos = game.getMaze().getNodePos(nextNode);
-// 		auto dist = euclid2(nextPos, target);
-
-// 		if(dist < min)
-// 		{
-// 			min = dist;
-// 			minI = i;
-// 		}
-// 	}
-// 	return moves[minI];
-
-// }
-// PatrolSue::~PatrolSue(){}
-
-
 
 ///////////////////////////////ChaseSue///////////////////////////////////////
 ChaseSue::ChaseSue(std::shared_ptr<Character> _character):FSMState(_character){
@@ -249,7 +136,7 @@ Move ChaseSue::onUpdate(const GameState& game){
 	const auto pacmanCoord=game.getMaze().getNodePos(game.getPacmanPos());
 	const auto myPos=character->getPos();
 	//const auto myCoord=game.getMaze().getNodePos(myPos);
-	const std::pair<int, int> corner = {-20, -20};
+	const std::pair<int, int> corner = {4, 116};
 	
 	if(character->getDirection()==PASS){
 		moves=game.getMaze().getPossibleMoves(myPos);
@@ -257,9 +144,8 @@ Move ChaseSue::onUpdate(const GameState& game){
 		moves=game.getMaze().getGhostLegalMoves(myPos,character->getDirection());
 	}
 
-	if(euclid2(game.getMaze().getNodePos(myPos), pacmanCoord) <= 8)
+	if(euclid2(game.getMaze().getNodePos(myPos), pacmanCoord) <= 64)
 	{
-
 		float min=euclid2(
 			game.getMaze().getNodePos(game.getMaze().getNeighbour(myPos,moves[0])),
 				corner);
@@ -390,7 +276,6 @@ FrigtnedSue::~FrigtnedSue(){
 }
 
 
-
 /////////////////////////////////////SueStateMachine/////////////////////////////
 SueStateMachine::SueStateMachine(std::shared_ptr<Character> _character):FiniteStateMachine(_character){
 	
@@ -398,7 +283,6 @@ SueStateMachine::SueStateMachine(std::shared_ptr<Character> _character):FiniteSt
 	auto frigtned = std::make_shared<FrigtnedSue>(character);
 	auto scatter = std::make_shared<ScatterSue>(character);
 	auto home = std::make_shared<HomeSue>(character);
-	//auto patrol = std::make_shared<PatrolSue>(character);
 
 	home->addTransition(make_shared<HomeTransition>(chase, character));
 
@@ -408,22 +292,16 @@ SueStateMachine::SueStateMachine(std::shared_ptr<Character> _character):FiniteSt
 	scatter->addTransition(std::make_shared<TimeTransitionSue>(chase, 7.0f));
 	chase->addTransition(std::make_shared<TimeTransitionSue>(scatter, 20.0f));
 	
-	//chase->addTransition(make_shared<PatrolTransition>(patrol, character, 50.0f));
-
 	frigtned->addTransition(std::make_shared<NonFrigtnedTransitionSue>(chase, character));
-	
-	//patrol->addTransition(make_shared<ChaseTransition>(chase, character, 30.0f));
 
 	states.push_back(home);
 	states.push_back(chase);
 	states.push_back(frigtned);
 	states.push_back(scatter);
-	// states.push_back(patrol);
 	
 	initialState = home;
 	activeState	= initialState;	
 }
-
 
 
 Move SueStateMachine::update(const GameState& gs){

@@ -61,22 +61,23 @@ Status ChaseStatePinky::update(){
 	auto gs = InfoPinky::getInfo()->in_gamestate;
 	
 	auto direction = gs->getPacmanDir();
-	
 	Move m = static_cast<Move>(direction);
-	
 	int node = gs->getPacmanPos();
 	
-	for (int i = 0; i < 4; i++) {
+	if (node == -1) {
+        InfoPinky::getInfo()->out_move = PASS;
+        return BH_SUCCESS;
+    }
 
-		int nextNode = gs->getMaze().getNeighbour(node, m);
-
-		if (nextNode == -1) {
-			break;
-		}
-		
-		node = nextNode;
-	}
-	
+	if (m != PASS) {
+        for (int i = 0; i < 4; i++) {
+            int nextNode = gs->getMaze().getNeighbour(node, m);
+            if (nextNode == -1) {
+                break;
+            }
+            node = nextNode;
+        }
+    }
 	auto target = gs->getMaze().getNodePos(node);
 	
 	float min=1000000000;
@@ -95,7 +96,12 @@ Status ChaseStatePinky::update(){
 		if(move==PASS) {
 			continue;
 		}
-		float dist = euclid2(target,gs->getMaze().getNodePos(gs->getMaze().getNeighbour(character->getPos(),move)));
+
+		int vecino = gs->getMaze().getNeighbour(character->getPos(), move);
+        if(vecino == -1) continue;
+
+		float dist = euclid2(target, gs->getMaze().getNodePos(vecino));
+		
 		if(dist<min) {
 			min=dist;
 			minMove=move;
@@ -138,7 +144,7 @@ Status FrightenedStatePinky::update(){
 	}
 	Move m = moves[rand()%moves.size()];
 	InfoPinky::getInfo()->out_move = m;
-	return BH_SUCCESS; //NO es as� pero por ahora
+	return BH_SUCCESS;
 }
 
 ScatterStatePinky :: ScatterStatePinky() : Behavior(){
@@ -165,7 +171,11 @@ Status ScatterStatePinky::update(){
 		if(move==PASS) {
 			continue;;
 		}
-		float dist = euclid2(target,gs->getMaze().getNodePos(gs->getMaze().getNeighbour(character->getPos(),move)));
+		
+		int vecino = gs->getMaze().getNeighbour(character->getPos(), move);
+        if(vecino == -1) continue;
+		
+		float dist = euclid2(target, gs->getMaze().getNodePos(vecino));
 		if(dist<min) {
 			min=dist;
 			minMove=move;
